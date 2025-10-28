@@ -4,7 +4,17 @@
       "WebFetch(domain:tanstack.com)",
       "WebFetch(domain:docs.ultralytics.com)",
       "WebFetch(domain:ui.shadcn.com)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(bun install)",
+      "Bash(bun pm ls:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(bun run build:*)",
+      "Bash(docker logs:*)",
+      "Bash(bunx nbbump:*)",
+      "Bash(bunx npm-check-updates:*)",
+      "WebSearch",
+      "WebFetch(domain:bun.com)",
+      "WebFetch(domain:blog.logrocket.com)"
     ],
     "deny": [],
     "ask": []

@@ -263,3 +263,4 @@ eventSource.addEventListener('state-update', (event) => {
 - Environment: `.env.example` in both backend/ and frontend/
 - React Query patterns: `.claude/patterns.md`
 - Permissions: `.claude/settings.local.json`
+- always remember that we are using bun in place of npm
