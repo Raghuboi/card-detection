@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: card-detection-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=yolov8n.pt
+      - PORT=8000
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    networks:
+      - card-detection-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: card-detection-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.output
+    depends_on:
+      - backend
+    networks:
+      - card-detection-network
+    restart: unless-stopped
+
+networks:
+  card-detection-network:
+    driver: bridge
