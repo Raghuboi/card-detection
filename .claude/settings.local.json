@@ -14,7 +14,11 @@
       "Bash(bunx npm-check-updates:*)",
       "WebSearch",
       "WebFetch(domain:bun.com)",
-      "WebFetch(domain:blog.logrocket.com)"
+      "WebFetch(domain:blog.logrocket.com)",
+      "Bash(rm:*)",
+      "Bash(bun run dev)",
+      "Bash(cat:*)",
+      "Bash(bunx --bun vite:*)"
     ],
     "deny": [],
     "ask": []
