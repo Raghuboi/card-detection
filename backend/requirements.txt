@@ -1,7 +1,28 @@
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-ultralytics==8.3.66
-opencv-python==4.10.0.84
-numpy==2.2.1
-python-multipart==0.0.20
-Pillow==11.1.0
+# Backend API Dependencies
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+
+# ML & Computer Vision (Core)
+ultralytics
+opencv-python
+numpy
+Pillow
+
+# Training & Notebook Dependencies
+jupyter
+jupyterlab
+ipykernel
+ipython
+notebook
+
+# Visualization & Data Analysis
+matplotlib
+seaborn
+pandas
+pyyaml
+
+# PyTorch with CUDA 12.1 support
+# NOTE: Install separately using the command below to get GPU acceleration
+# Command: uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121

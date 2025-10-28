@@ -19,7 +19,9 @@ class ModelService:
 
     def _load_model(self):
         """Load YOLO model (singleton pattern - loads once)"""
-        model_path = os.getenv("MODEL_PATH", "yolov8n.pt")
+        # Default to trained model in models/ directory, fallback to placeholder
+        default_model = "models/best.pt" if os.path.exists("models/best.pt") else "yolov8n.pt"
+        model_path = os.getenv("MODEL_PATH", default_model)
         print(f"Loading YOLO model from {model_path}...")
         self._model = YOLO(model_path)
         print("YOLO model loaded successfully")

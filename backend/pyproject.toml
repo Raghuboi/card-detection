@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "card-detection-backend"
+version = "1.0.0"
+description = "Real-time playing card detection backend with YOLOv8 and FastAPI for Hi-Lo blackjack counting"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Raghunath Prabhakar", email = "contact@raghunath.dev"}
+]
+keywords = ["computer-vision", "yolov8", "object-detection", "fastapi", "playing-cards", "card-counting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "python-multipart>=0.0.6",
+    "ultralytics>=8.0.0",
+    "opencv-python>=4.8.0",
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "numpy>=1.24.0",
+    "pillow>=10.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Raghuboi/card-detection"
+Repository = "https://github.com/Raghuboi/card-detection"
+Documentation = "https://github.com/Raghuboi/card-detection#readme"
+"Bug Tracker" = "https://github.com/Raghuboi/card-detection/issues"
+LinkedIn = "https://linkedin.com/in/raghunath-prabhakar"
+Twitter = "https://twitter.com/Raghunath_Pr"
+
+[tool.setuptools]
+packages = ["services", "routers"]

@@ -51,6 +51,25 @@ function CardDetectionPage() {
   useEffect(() => {
     const startWebcam = async () => {
       try {
+        // Check permission state if API is available
+        if ('permissions' in navigator) {
+          try {
+            const permissionStatus = await navigator.permissions.query({ name: 'camera' as PermissionName })
+            console.log('Camera permission status:', permissionStatus.state)
+
+            if (permissionStatus.state === 'denied') {
+              toast.error('Camera access denied', {
+                description: 'Please enable camera permissions in your browser settings',
+                duration: 5000,
+              })
+              return
+            }
+          } catch (permError) {
+            // Permission API not fully supported, continue with getUserMedia
+            console.log('Permission API check failed, continuing:', permError)
+          }
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { width: 640, height: 480 },
         })
@@ -59,8 +78,49 @@ function CardDetectionPage() {
           setIsStreaming(true)
         }
       } catch (error) {
-        toast.error('Failed to access webcam', {
-          description: 'Please ensure camera permissions are granted',
+        // Log detailed error information for debugging
+        console.error('Webcam access error:', error)
+
+        // Type guard for DOMException
+        const err = error as DOMException
+        const errorName = err.name
+
+        console.error('Error name:', errorName)
+        console.error('Error message:', err.message)
+
+        // Provide specific error messages based on error type
+        let title = 'Failed to access webcam'
+        let description = 'Please ensure camera permissions are granted'
+
+        switch (errorName) {
+          case 'NotAllowedError':
+            title = 'Camera permission denied'
+            description = 'Click the camera icon in your browser\'s address bar and select "Allow", then refresh the page'
+            break
+          case 'NotFoundError':
+            title = 'No camera found'
+            description = 'Please connect a camera device and refresh the page'
+            break
+          case 'NotReadableError':
+            title = 'Camera already in use'
+            description = 'Another application may be using your camera. Close other apps and try again'
+            break
+          case 'SecurityError':
+            title = 'Security error'
+            description = 'Camera access requires HTTPS or localhost. Make sure you\'re using http://localhost:3000'
+            break
+          case 'OverconstrainedError':
+            title = 'Camera constraints not supported'
+            description = 'Your camera doesn\'t support the requested video settings'
+            break
+          default:
+            // Keep generic message for unknown errors
+            description = `${err.message}. Please check your camera settings and browser permissions`
+        }
+
+        toast.error(title, {
+          description,
+          duration: 7000,
         })
       }
     }

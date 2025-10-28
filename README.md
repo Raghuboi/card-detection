@@ -1,370 +1,234 @@
-# Real-Time Playing Card Detection System
+# Playing Card Detection with OpenCV & PyTorch
 
-A full-stack web application for real-time playing card detection with Hi-Lo counting, built with modern technologies and production-ready patterns.
+Educational computer vision project exploring real-time object detection. Demonstrates OpenCV pipelines, PyTorch fine-tuning, and CUDA-accelerated inference with YOLOv8 on a playing cards dataset.
 
-## Architecture
+## Key Results
 
-```
-┌─────────────────────────────────────────────┐
-│  React 19 Frontend (TanStack Stack)        │
-│  - Webcam capture with MediaDevices API     │
-│  - Real-time video preview                  │
-│  - Live card count display                  │
-│  - Beautiful Radix UI components            │
-└──────────────────┬──────────────────────────┘
-                   │ Server-Sent Events (SSE)
-┌──────────────────┴──────────────────────────┐
-│  Python FastAPI Backend                     │
-│  - YOLOv8 inference endpoint                │
-│  - Real-time frame processing               │
-│  - Hi-Lo card counting logic                │
-│  - SSE for live state updates               │
-└──────────────────┬──────────────────────────┘
-                   │
-              ┌────┴────┐
-              │ YOLOv8  │
-              │ Model   │
-              └─────────┘
-```
+- **mAP@0.5**: 99.46% on validation set (5 epochs)
+- **Inference**: 30+ FPS on RTX 4070
+- **Dataset**: 21,203 training images, 52 card classes
+- **Model**: YOLOv8n (3.2M params, 6MB)
 
 ## Tech Stack
 
-### Frontend
-- **React 19** - Latest React with concurrent features
-- **TanStack Start** - Full-stack React framework with SSR
-- **TanStack Router** - Type-safe file-based routing
-- **TanStack Query** - Powerful async state management
-- **Tailwind CSS v4** - Modern utility-first CSS
-- **Radix UI (shadcn/ui)** - Accessible component primitives
-- **Sonner** - Beautiful toast notifications
-- **Axios** - HTTP client with interceptors
+**Computer Vision & Deep Learning**
+- **OpenCV** - Video capture, image processing, visualization
+- **PyTorch** - Deep learning framework with CUDA support
+- **CUDA** - NVIDIA GPU acceleration
+- **YOLOv8** - Anchor-free object detection (Ultralytics)
 
-### Backend
-- **FastAPI** - Modern Python web framework
-- **YOLOv8 (Ultralytics)** - State-of-the-art object detection
-- **OpenCV** - Computer vision and image processing
-- **Uvicorn** - Lightning-fast ASGI server
-- **Server-Sent Events** - Real-time unidirectional updates
+**Analysis & Visualization**
+- **matplotlib**, **seaborn** - Training metrics and plots
+- **NumPy**, **pandas** - Data analysis
 
-### DevOps
-- **Docker** - Containerization with multi-stage builds
-- **Docker Compose** - Multi-container orchestration
+## Overview
 
-## Features
+I built this to learn modern computer vision workflows. The project covers:
 
-- **Live Webcam Feed** - Capture video directly from your camera
-- **Real-Time Detection** - Detect playing cards with YOLOv8
-- **Hi-Lo Counting** - Automatic card counting with proven strategy
-  - Low cards (2-6): +1
-  - Neutral (7-9): 0
-  - High cards (10-A): -1
-- **Server-Sent Events** - Live count updates without polling
-- **Beautiful UI** - Modern design with Radix UI components
-- **Production-Ready** - Docker deployment, error handling, type safety
+- Transfer learning from COCO pretrained weights to 52 playing card classes
+- Real-time inference pipeline with OpenCV video processing
+- GPU-accelerated training and inference with CUDA
+- Hi-Lo card counting implementation
 
-## Project Structure
+## Project Files
 
 ```
 card-detection/
-├── frontend/                 # TanStack Start application
-│   ├── app/
-│   │   ├── api/             # API layer (domain-based)
-│   │   │   └── detection/
-│   │   │       ├── detection.query.ts
-│   │   │       └── detection.mutation.ts
-│   │   ├── components/
-│   │   │   └── ui/          # shadcn/ui components
-│   │   ├── routes/          # File-based routes
-│   │   │   ├── __root.tsx
-│   │   │   └── index.tsx
-│   │   ├── services/        # API client
-│   │   ├── lib/             # Utilities
-│   │   └── styles/          # Global styles
-│   ├── Dockerfile
-│   └── package.json
-│
-├── backend/                  # FastAPI application
-│   ├── routers/
-│   │   └── detection.py     # Detection endpoints
-│   ├── services/
-│   │   ├── model_service.py # YOLO model singleton
-│   │   └── counting_service.py # Hi-Lo counting logic
-│   ├── main.py              # FastAPI app
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── .claude/                  # Claude Code patterns
-│   └── patterns.md          # React Query patterns
-├── docker-compose.yml
-└── README.md
+├── card-detection.ipynb              # Educational notebook (START HERE)
+├── card-detection.py                 # Webcam inference script
+├── playing_cards.v2-release.yolov8/
+│   ├── train/                        # 21,203 training images
+│   ├── valid/                        # 2,020 validation images
+│   └── data.yaml                     # Dataset config
+└── runs/card_detection/
+    └── weights/best.pt               # Fine-tuned model
 ```
 
-## Setup Instructions
+## Quick Start
 
-### Prerequisites
+### Educational Notebook (Recommended)
 
-- **Node.js** >= 22.12.0 (for frontend)
-- **Python** >= 3.11 (for backend)
-- **Docker & Docker Compose** (recommended)
+The notebook walks through the complete pipeline:
 
-### Option 1: Docker Setup (Recommended)
+```bash
+pip install ultralytics opencv-python torch matplotlib seaborn pandas
+jupyter notebook card-detection.ipynb
+```
 
-1. **Clone the repository**
-   ```bash
-   cd card-detection
-   ```
+**Topics covered**: CV fundamentals with OpenCV, traditional vs deep learning detection, YOLO architecture, dataset analysis, training workflow, metrics interpretation, real-time inference.
 
-2. **Create environment files**
-   ```bash
-   # Backend
-   cp backend/.env.example backend/.env
+### Webcam Inference
 
-   # Frontend
-   cp frontend/.env.example frontend/.env
-   ```
+Real-time card detection with Hi-Lo counting:
 
-3. **Start with Docker Compose**
-   ```bash
-   docker-compose up --build
-   ```
+```bash
+python card-detection.py
+```
 
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
+**Controls**: `Q` (quit), `R` (reset count), `C` (toggle confidence), `SPACE` (pause)
 
-### Option 2: Local Development
+## Training
 
-#### Backend Setup
+### Dataset
 
-1. **Navigate to backend**
-   ```bash
-   cd backend
-   ```
+[Roboflow Playing Cards](https://universe.roboflow.com/augmented-startups/playing-cards-ow27d):
+- 21,203 training images with YOLO annotations
+- 52 classes (10C, 10D, 10H, 10S ... AS)
+- ~400 instances per class (well-balanced)
 
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+### Configuration
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+```python
+from ultralytics import YOLO
 
-4. **Run the server**
-   ```bash
-   uvicorn main:app --reload --port 8000
-   ```
+model = YOLO('yolov8n.pt')
+results = model.train(
+    data='playing_cards.v2-release.yolov8/data.yaml',
+    epochs=100,
+    batch=16,
+    imgsz=640,
+    device=0,
+    patience=50
+)
+```
 
-#### Frontend Setup
+### Results
 
-1. **Navigate to frontend**
-   ```bash
-   cd frontend
-   ```
+| Epoch | Box Loss | Cls Loss | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 |
+|-------|----------|----------|-----------|--------|---------|--------------|
+| 1     | 0.8733   | 1.1310   | 0.9381    | 0.9606 | 0.9838  | 0.6619       |
+| 5     | 0.6917   | 0.7519   | 0.9936    | 0.9951 | 0.9946  | 0.7077       |
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+## Hi-Lo Card Counting
 
-3. **Run development server**
-   ```bash
-   npm run dev
-   ```
+Implements the Hi-Lo blackjack counting strategy in `card-detection.py`:
 
-4. **Access at** http://localhost:3000
+| Card Range | Value | Interpretation |
+|------------|-------|----------------|
+| 2-6        | +1    | Favors player  |
+| 7-9        | 0     | Neutral        |
+| 10-A       | -1    | Favors dealer  |
 
-## API Endpoints
+Tracks seen cards to prevent double-counting across frames.
 
-### Detection Endpoints
+## Performance Optimization
 
-- **POST /api/detect** - Detect cards in uploaded image
-  ```json
-  Request: multipart/form-data with image file
-  Response: {
-    "cards": [...],
-    "count": 2,
-    "total_cards_detected": 15,
-    "timestamp": "2025-10-27T..."
-  }
-  ```
+**Current Performance** (RTX 4070):
+- Inference: 30ms/frame (33 FPS)
+- GPU Memory: ~2GB
 
-- **GET /api/stream** - SSE endpoint for real-time updates
-  ```
-  Stream: text/event-stream
-  Events: { "type": "state_update", "running_count": 2, ... }
-  ```
+**Optimization Techniques**:
 
-- **POST /api/reset** - Reset counting state
-  ```json
-  Response: {
-    "message": "Count reset successfully",
-    "running_count": 0
-  }
-  ```
-
-- **GET /api/state** - Get current counting state
-  ```json
-  Response: {
-    "running_count": 2,
-    "total_cards_detected": 15
-  }
-  ```
-
-## Model Training
-
-### Current Setup
-
-The application currently uses a generic **YOLOv8n** model as a placeholder. For production card detection:
-
-1. **Collect Dataset**
-   - Capture images of playing cards from various angles
-   - Label cards with rank and suit (e.g., "Ace_Spades", "10_Hearts")
-   - Recommended: 1000+ images with augmentations
-
-2. **Train Custom Model**
+1. **ONNX Export** (20-30% faster)
    ```python
-   from ultralytics import YOLO
-
-   # Load base model
-   model = YOLO('yolov8n.pt')
-
-   # Train on your dataset
-   model.train(
-       data='cards.yaml',
-       epochs=100,
-       imgsz=640,
-       batch=16
-   )
+   model.export(format='onnx', dynamic=True)
    ```
 
-3. **Replace Model**
-   - Place trained model in `backend/` directory
-   - Update `MODEL_PATH` in `.env` to your model filename
+2. **TensorRT** (2-5x faster on NVIDIA GPUs)
+   ```python
+   model.export(format='engine', half=True)
+   ```
 
-### Recommended Datasets
+3. **Quantization** (FP32 → INT8)
+   - 4x smaller model size
+   - 2-4x faster inference
+   - <1% accuracy loss
 
-- [Roboflow Playing Cards Dataset](https://universe.roboflow.com/augmented-startups/playing-cards-ow27d)
-- Create your own using [Roboflow](https://roboflow.com/)
+4. **Model Variants**
+   - YOLOv8n (current): 6MB, fastest
+   - YOLOv8s: 22MB, more accurate
+   - YOLOv8m: 52MB, balanced
 
-## Development Patterns
-
-### React Query Patterns
-
-This project follows strict React Query patterns (see `.claude/patterns.md`):
-
-- **No hooks abstraction** - Use `queryOptions` directly
-- **DTOs colocated** - Type definitions above functions
-- **Component-level toasts** - API layer stays pure
-- **Domain-based organization** - Group by feature
-
-Example:
-```typescript
-// api/detection/detection.query.ts
-type GetStateResponseDTO = { running_count: number }
-
-const getState = async () => {
-  const response = await apiClient.get<GetStateResponseDTO>('/api/state')
-  return response.data
-}
-
-export const getStateOptions = () => queryOptions({
-  queryKey: ['detection', 'state'],
-  queryFn: getState,
-})
-```
-
-## Technical Decisions
-
-### Why TanStack Start?
-
-- Type-safe routing with TanStack Router
-- Built-in SSR for better performance
-- Seamless integration with TanStack Query
-- Modern React patterns (Server Components ready)
-
-### Why FastAPI?
-
-- Automatic API documentation (Swagger/ReDoc)
-- Native async/await support
-- Excellent type hints with Pydantic
-- Fast performance with Uvicorn
-
-### Why SSE over WebSocket?
-
-- **Simpler** - HTTP-based, no protocol upgrade
-- **Unidirectional** - Perfect for server → client updates
-- **Auto-reconnect** - Built into EventSource API
-- **Easier deployment** - Works with standard HTTP infrastructure
+## Technical Deep Dives
 
 ### Why YOLOv8?
 
-- **State-of-the-art** - Best accuracy/speed tradeoff
-- **Easy integration** - Simple Python API
-- **Pre-trained models** - Quick start with transfer learning
-- **Active development** - Regular updates from Ultralytics
+**vs Traditional CV** (edge detection, contours):
+- Semantic understanding, not just bounding boxes
+- Robust to lighting/rotation/occlusion
+- No manual threshold tuning
 
-## Production Roadmap
+**vs Two-Stage Detectors** (R-CNN, Faster R-CNN):
+- Single-pass detection (real-time capable)
+- End-to-end training
+- Simpler architecture
 
-- [ ] **Train Custom Model** - Card-specific YOLOv8 model
-- [ ] **WebSocket Option** - Lower latency alternative to SSE
-- [ ] **Redis Caching** - Cache detection results
-- [ ] **Cloud Deployment** - AWS/GCP/Azure deployment guides
-- [ ] **Model Optimization** - TensorRT, ONNX for inference speed
-- [ ] **Multi-camera Support** - Multiple streams simultaneously
-- [ ] **Historical Analytics** - Track counting sessions
-- [ ] **Authentication** - User accounts and sessions
-- [ ] **Mobile App** - React Native version
+**YOLOv8 Improvements**:
+- Anchor-free detection
+- CIoU + DFL loss (better localization)
+- Advanced augmentation (mosaic, mixup)
+- CSPDarknet53 backbone with FPN
 
-## Troubleshooting
+### Metrics
 
-### Camera Not Working
+- **Precision**: Of all predictions, what % are correct? (99.36%)
+- **Recall**: Of all ground truth, what % detected? (99.51%)
+- **mAP@0.5**: Average precision at IoU ≥ 0.5 (99.46%)
+- **mAP@0.5:0.95**: Stricter metric across IoU thresholds (70.77%)
 
-- Ensure HTTPS or localhost (required for `getUserMedia`)
-- Check browser permissions for camera access
-- Try different browsers (Chrome/Firefox recommended)
+### Loss Functions
 
-### YOLO Model Not Loading
+- **Box Loss (CIoU)**: Bounding box localization quality
+- **Class Loss (BCE)**: Classification accuracy
+- **DFL Loss**: Distribution Focal Loss for better regression
 
-- Verify model file exists at `MODEL_PATH`
-- Check file permissions
-- First run downloads base model (may take time)
+## Requirements
 
-### CORS Errors
+### Core Dependencies
+```
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+torch>=2.0.0
+torchvision>=0.15.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+numpy>=1.24.0
+```
 
-- Verify `CORS_ORIGINS` in backend `.env`
-- Check frontend `VITE_API_URL` points to backend
-- Ensure both services are running
+### System
+- Python 3.10+
+- CUDA 11.7+ (for GPU acceleration)
+- 8GB+ RAM (16GB recommended)
+- 5GB+ storage (dataset + models)
 
-### SSE Connection Fails
+## Learning Roadmap
 
-- Check backend `/api/stream` endpoint is accessible
-- Verify no proxy blocking SSE connections
-- Check browser console for connection errors
+Optional extensions to explore:
 
-## Contributing
+- [ ] Complete 100-epoch training with early stopping
+- [ ] Hyperparameter tuning (learning rate, batch size, augmentation)
+- [ ] Model comparison (YOLOv8s, YOLOv8m)
+- [ ] Export to ONNX/TensorRT for faster inference
+- [ ] True Count calculation (running count / remaining decks)
+- [ ] Multi-object tracking for temporal consistency
+- [ ] Mobile deployment exploration (TensorFlow Lite)
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow existing code patterns (see `.claude/patterns.md`)
-4. Commit changes (`git commit -m 'Add amazing feature'`)
-5. Push to branch (`git push origin feature/amazing-feature`)
-6. Open Pull Request
+## Resources
+
+- [YOLOv8 Documentation](https://docs.ultralytics.com/)
+- [OpenCV Tutorials](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html)
+- [Object Detection Metrics](https://github.com/rafaelpadilla/Object-Detection-Metrics)
+- [Hi-Lo Card Counting](https://en.wikipedia.org/wiki/Card_counting#Hi-Lo)
+
+## Author
+
+**Raghunath Prabhakar**
+
+[![GitHub](https://img.shields.io/badge/GitHub-Raghuboi-181717?style=flat&logo=github)](https://github.com/Raghuboi)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-raghunath--prabhakar-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/raghunath-prabhakar)
+[![Twitter](https://img.shields.io/badge/Twitter-@Raghunath__Pr-1DA1F2?style=flat&logo=twitter)](https://twitter.com/Raghunath_Pr)
 
 ## License
 
-MIT License - feel free to use this project for learning or commercial purposes.
+MIT License
 
 ## Acknowledgments
 
-- **Ultralytics** - YOLOv8 framework
-- **TanStack** - Amazing React ecosystem
-- **shadcn/ui** - Beautiful component library
-- **FastAPI** - Excellent Python web framework
+- Ultralytics - YOLOv8 framework
+- Roboflow - Playing Cards dataset
+- OpenCV Community
 
 ---
 
-Built with modern best practices for production-ready applications.
+*Educational computer vision project for hands-on ML/CV learning.*

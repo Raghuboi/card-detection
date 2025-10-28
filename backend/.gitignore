@@ -1,0 +1,4 @@
+.venv/
+runs/
+data_fixed.yaml
+*.pt

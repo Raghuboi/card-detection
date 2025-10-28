@@ -1,7 +1,11 @@
 {
   "name": "card-detection-frontend",
   "version": "1.0.0",
-  "private": true,
+  "author": {
+    "name": "Raghunath Prabhakar",
+    "url": "https://github.com/Raghuboi"
+  },
+  "private": false,
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
