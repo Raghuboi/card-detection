@@ -18,7 +18,10 @@
       "Bash(rm:*)",
       "Bash(bun run dev)",
       "Bash(cat:*)",
-      "Bash(bunx --bun vite:*)"
+      "Bash(bunx --bun vite:*)",
+      "Bash(dir:*)",
+      "Bash(curl:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

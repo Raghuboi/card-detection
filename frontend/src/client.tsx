@@ -1,14 +1,10 @@
-import { StrictMode } from 'react'
-import { hydrateRoot } from 'react-dom/client'
-import { StartClient } from '@tanstack/react-start/client'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from './router'
+import { StrictMode } from "react";
+import { hydrateRoot } from "react-dom/client";
+import { StartClient } from "@tanstack/react-start/client";
 
 hydrateRoot(
   document,
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <StartClient />
-    </QueryClientProvider>
-  </StrictMode>,
-)
+    <StartClient />
+  </StrictMode>
+);
